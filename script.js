@@ -3,20 +3,47 @@ const menuPanel = document.querySelector(".menu-panel");
 const signinModal = document.querySelector("#signin-modal");
 const openSigninButtons = document.querySelectorAll("[data-open-signin]");
 const closeSigninButtons = document.querySelectorAll("[data-close-signin]");
-const roleChoices = document.querySelectorAll("[data-role]");
 const dashboard = document.querySelector("[data-dashboard]");
 const dashboardTitle = document.querySelector("#dashboard-title");
 const currentRoleLabel = document.querySelector("#current-role-label");
 const signoutButton = document.querySelector("[data-signout]");
 const output = document.querySelector("#generated-output");
-const roleOrder = ["guest", "member", "staff", "hr", "shr"];
+const discordLoginForm = document.querySelector("#discord-login-form");
+const codeLoginForm = document.querySelector("#code-login-form");
+const discordUsernameInput = document.querySelector("#discord-username");
+const accessCodeInput = document.querySelector("#staff-access-code");
+const signinStepDiscord = document.querySelector("#signin-step-discord");
+const signinStepCode = document.querySelector("#signin-step-code");
+const signinUserDisplay = document.querySelector("#signin-user-display");
+const staffChatBox = document.querySelector("#staff-chat-box");
+const ownerCodeList = document.querySelector("#owner-code-list");
+const roleOrder = ["guest", "member", "staff", "hr", "shr", "owner", "founder"];
 const roleNames = {
   guest: "Guest",
   member: "Member",
   staff: "Staff",
   hr: "HR / IA Max",
-  shr: "SHR"
+  shr: "SHR",
+  owner: "Owner",
+  founder: "Founder"
 };
+const accessCodes = {
+  "STAFF-ENTRY-7421": "staff",
+  "HRI-AMAX-5518": "hr",
+  "SHR-CTRL-9084": "shr",
+  "OWNER-ALPHA-4401": "owner",
+  "OWNER-BRAVO-5512": "owner",
+  "OWNER-CHARLIE-6623": "owner",
+  "OWNER-DELTA-7734": "owner",
+  "FOUNDER-WIST-9001": "founder"
+};
+const ownerCodes = [
+  "OWNER-ALPHA-4401",
+  "OWNER-BRAVO-5512",
+  "OWNER-CHARLIE-6623",
+  "OWNER-DELTA-7734",
+  "FOUNDER-WIST-9001"
+];
 
 if (menuToggle && menuPanel) {
   const closeMenu = () => {
@@ -44,6 +71,10 @@ if (menuToggle && menuPanel) {
 const openSignin = () => {
   if (signinModal) {
     signinModal.hidden = false;
+  }
+  if (signinStepDiscord && signinStepCode) {
+    signinStepDiscord.hidden = false;
+    signinStepCode.hidden = true;
   }
 };
 
@@ -83,6 +114,30 @@ const randomCode = (prefix) =>
     .slice(2, 6)
     .toUpperCase()}`;
 
+const currentDiscordUser = () => localStorage.getItem("msrpDiscordUser") || "Unknown user";
+
+const pushOutput = (message) => {
+  if (output) {
+    output.insertAdjacentHTML("afterbegin", `<div class="output-item">${message}</div>`);
+  }
+};
+
+const pushChat = (message) => {
+  if (staffChatBox) {
+    staffChatBox.insertAdjacentHTML("afterbegin", `<div class="chat-message">${message}</div>`);
+  }
+};
+
+const renderOwnerCodes = () => {
+  if (!ownerCodeList) {
+    return;
+  }
+
+  ownerCodeList.innerHTML = ownerCodes
+    .map((code) => `<div class="code-item">${code}</div>`)
+    .join("");
+};
+
 openSigninButtons.forEach((button) => {
   button.addEventListener("click", () => {
     openSignin();
@@ -97,18 +152,52 @@ closeSigninButtons.forEach((button) => {
   button.addEventListener("click", closeSignin);
 });
 
-roleChoices.forEach((button) => {
-  button.addEventListener("click", () => {
-    const role = button.getAttribute("data-role") || "member";
+if (discordLoginForm) {
+  discordLoginForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const username = discordUsernameInput?.value.trim() || "";
+
+    if (!username) {
+      return;
+    }
+
+    localStorage.setItem("msrpDiscordUser", username);
+
+    if (signinUserDisplay) {
+      signinUserDisplay.textContent = `Signed in with Discord as ${username}. Now enter your access code.`;
+    }
+
+    if (signinStepDiscord && signinStepCode) {
+      signinStepDiscord.hidden = true;
+      signinStepCode.hidden = false;
+    }
+  });
+}
+
+if (codeLoginForm) {
+  codeLoginForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const accessCode = accessCodeInput?.value.trim().toUpperCase() || "";
+    const role = accessCodes[accessCode];
+
+    if (!role) {
+      pushOutput(`Access denied for ${currentDiscordUser()} - invalid code entered.`);
+      return;
+    }
+
     localStorage.setItem("msrpRole", role);
     renderDashboard();
+    pushOutput(`${currentDiscordUser()} signed in successfully with ${roleNames[role]} access.`);
     closeSignin();
+    codeLoginForm.reset();
+    discordLoginForm.reset();
   });
-});
+}
 
 if (signoutButton) {
   signoutButton.addEventListener("click", () => {
     localStorage.removeItem("msrpRole");
+    localStorage.removeItem("msrpDiscordUser");
     renderDashboard();
   });
 }
@@ -125,6 +214,10 @@ document.querySelectorAll("[data-tool-form]").forEach((form) => {
       message = `${formData.get("action")} saved for ${formData.get("member")} - ${formData.get("reason")}`;
     }
 
+    if (type === "promo") {
+      message = `Promotion logged for ${formData.get("member")} to ${formData.get("rank")}`;
+    }
+
     if (type === "key") {
       message = `Key created for ${formData.get("label")}: ${randomCode("MSRPKEY")}`;
     }
@@ -133,12 +226,16 @@ document.querySelectorAll("[data-tool-form]").forEach((form) => {
       message = `Join code created for ${formData.get("label")}: ${randomCode("MSRPCODE")}`;
     }
 
-    if (output) {
-      output.insertAdjacentHTML("afterbegin", `<div class="output-item">${message}</div>`);
+    if (type === "chat") {
+      message = `${currentDiscordUser()}: ${formData.get("message")}`;
+      pushChat(message);
     }
+
+    pushOutput(message);
 
     form.reset();
   });
 });
 
+renderOwnerCodes();
 renderDashboard();

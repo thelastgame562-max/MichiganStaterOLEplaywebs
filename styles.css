@@ -655,6 +655,26 @@ a {
   grid-column: span 2;
 }
 
+.chat-box,
+.code-list {
+  display: grid;
+  gap: 10px;
+}
+
+.chat-box {
+  margin-top: 14px;
+  max-height: 220px;
+  overflow: auto;
+}
+
+.chat-message,
+.code-item {
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(242, 247, 247, 0.9);
+}
+
 #generated-output {
   display: grid;
   gap: 10px;
@@ -689,10 +709,23 @@ a {
   border-radius: 28px;
 }
 
+.signin-page {
+  background: #ffffff;
+  color: #111111;
+  border: 0;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25);
+}
+
 .signin-dialog p {
   margin: 0 0 20px;
   color: rgba(232, 240, 240, 0.76);
   line-height: 1.8;
+}
+
+.signin-page p,
+.signin-page h3,
+.signin-page .signin-help {
+  color: #2c2f33;
 }
 
 .close-modal {
@@ -709,22 +742,48 @@ a {
   cursor: pointer;
 }
 
-.role-picker {
-  display: grid;
-  gap: 12px;
+.signin-tag {
+  display: inline-block;
+  margin-bottom: 14px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: #5865f2;
+  color: #ffffff;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
 }
 
-.role-choice {
+.signin-form {
+  display: grid;
+  gap: 14px;
+}
+
+.signin-form input {
   width: 100%;
-  border: 1px solid rgba(93, 231, 219, 0.22);
+  border: 1px solid #d7dce2;
   border-radius: 16px;
-  background: rgba(93, 231, 219, 0.08);
-  color: var(--text);
+  background: #f8f9fb;
+  color: #111111;
+  font: inherit;
+  padding: 16px;
+}
+
+.discord-button {
+  border: 0;
+  border-radius: 16px;
+  background: #5865f2;
+  color: #ffffff;
   font: inherit;
   font-weight: 700;
   padding: 16px;
   cursor: pointer;
-  text-align: left;
+}
+
+.signin-help {
+  margin-top: 12px;
+  font-size: 0.95rem;
 }
 
 @keyframes scrollDot {
