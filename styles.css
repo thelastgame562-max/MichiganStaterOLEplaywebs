@@ -64,7 +64,7 @@ a {
 .nav {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 16px;
   font-size: 1rem;
   font-weight: 500;
 }
@@ -145,6 +145,10 @@ a {
   width: 100%;
   margin-top: 8px;
   padding: 12px 14px;
+}
+
+.menu-panel [hidden] {
+  display: none !important;
 }
 
 .nav a {

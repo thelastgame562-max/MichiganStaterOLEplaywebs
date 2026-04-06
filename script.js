@@ -8,6 +8,8 @@ const dashboardTitle = document.querySelector("#dashboard-title");
 const currentRoleLabel = document.querySelector("#current-role-label");
 const signoutButton = document.querySelector("[data-signout]");
 const output = document.querySelector("#generated-output");
+const signoutButtons = document.querySelectorAll("[data-signout]");
+const panelLinks = document.querySelectorAll("[data-panel-link]");
 const discordLoginForm = document.querySelector("#discord-login-form");
 const codeLoginForm = document.querySelector("#code-login-form");
 const discordUsernameInput = document.querySelector("#discord-username");
@@ -27,6 +29,13 @@ const roleNames = {
   shr: "SHR",
   owner: "Owner",
   founder: "Founder"
+};
+const panelRequirements = {
+  staff: "staff",
+  hr: "hr",
+  shr: "shr",
+  owner: "owner",
+  founder: "founder"
 };
 const accessCodes = {
   "STAFF-ENTRY-7421": "staff",
@@ -106,6 +115,15 @@ const renderDashboard = () => {
   document.querySelectorAll("[data-role-min]").forEach((card) => {
     const minimumRole = card.getAttribute("data-role-min");
     card.hidden = !canAccess(currentRole, minimumRole);
+  });
+
+  panelLinks.forEach((link) => {
+    const requirement = panelRequirements[link.getAttribute("data-panel-link")] || "founder";
+    link.hidden = !canAccess(currentRole, requirement);
+  });
+
+  signoutButtons.forEach((button) => {
+    button.hidden = currentRole === "guest" || currentRole === "member";
   });
 };
 
@@ -217,15 +235,21 @@ if (codeLoginForm) {
   });
 }
 
-if (signoutButton) {
-  signoutButton.addEventListener("click", () => {
+const handleSignout = () => {
     localStorage.removeItem("msrpRole");
     localStorage.removeItem("msrpDiscordUser");
     localStorage.removeItem("msrpRememberMe");
     sessionStorage.removeItem("msrpDiscordUserSession");
     renderDashboard();
-  });
+};
+
+if (signoutButton) {
+  signoutButton.addEventListener("click", handleSignout);
 }
+
+signoutButtons.forEach((button) => {
+  button.addEventListener("click", handleSignout);
+});
 
 document.querySelectorAll("[data-tool-form]").forEach((form) => {
   form.addEventListener("submit", (event) => {

@@ -22,11 +22,6 @@
 
       <nav class="nav" aria-label="Primary navigation">
         <a href="#home">Home</a>
-        <a href="#rules">Rules</a>
-        <a href="#departments">Departments</a>
-        <a href="#about">About</a>
-        <a href="#staff-panel">Staff Panel</a>
-        <a href="https://discord.gg/N2wBRXS2" target="_blank" rel="noreferrer">Discord</a>
         <button class="nav-signin" type="button" data-open-signin>Sign In</button>
       </nav>
 
@@ -39,16 +34,14 @@
 
         <div class="menu-panel" id="menu-panel" hidden>
           <a href="#home">Home</a>
-          <a href="#rules">Rules</a>
-          <a href="#departments">Departments</a>
-          <a href="#about">About</a>
-          <a href="#staff-panel">Staff Panel</a>
-          <a href="#staff-chat">Staff Chat</a>
-          <a href="#hr-panel">HR Panel</a>
-          <a href="#shr-panel">SHR</a>
-          <a href="#founder-panel">Founder</a>
-          <a href="https://discord.gg/N2wBRXS2" target="_blank" rel="noreferrer">Discord</a>
+          <a href="#staff-panel" data-panel-link="staff" hidden>Staff Panel</a>
+          <a href="#staff-chat" data-panel-link="staff" hidden>Staff Chat</a>
+          <a href="#hr-panel" data-panel-link="hr" hidden>HR Panel</a>
+          <a href="#shr-panel" data-panel-link="shr" hidden>SHR</a>
+          <a href="#owner-panel" data-panel-link="owner" hidden>Owner</a>
+          <a href="#founder-panel" data-panel-link="founder" hidden>Founder</a>
           <button class="menu-signin" type="button" data-open-signin>Sign In</button>
+          <button class="menu-signin" type="button" data-signout hidden>Sign Out</button>
         </div>
       </div>
     </header>
@@ -105,7 +98,7 @@
         </div>
       </section>
 
-      <section class="info-grid" id="departments">
+      <section class="info-grid">
         <article class="info-card">
           <h2>Professional Standards</h2>
           <p>
@@ -129,7 +122,7 @@
         </article>
       </section>
 
-      <section class="rules-section" id="rules">
+      <section class="rules-section">
         <div class="section-heading">
           <p class="eyebrow">In-Game Regulations</p>
           <h2>Michigan State Roleplay Rules</h2>
@@ -221,7 +214,7 @@
         </footer>
       </section>
 
-      <section class="about-section" id="about">
+      <section class="about-section">
         <div class="section-heading">
           <p class="eyebrow">About Us</p>
           <h2>Built Around Quality Roleplay</h2>
@@ -402,7 +395,7 @@
               </div>
             </section>
 
-            <section class="console-card" data-role-min="owner" id="founder-panel">
+            <section class="console-card" data-role-min="owner" id="owner-panel">
               <h4>Owner Panel</h4>
               <p>Owner has full control over all panels, chats, codes, and internal systems.</p>
               <div class="console-actions">
@@ -425,6 +418,16 @@
               <h4>Owner Codes</h4>
               <p>These are the four owner codes and the founder code stored on the site.</p>
               <div class="code-list" id="owner-code-list"></div>
+            </section>
+
+            <section class="console-card" data-role-min="founder" id="founder-panel">
+              <h4>Founder Panel</h4>
+              <p>Founder access gives complete control over every panel, log, chat, and internal system.</p>
+              <div class="console-actions">
+                <button type="button">Open Founder Console</button>
+                <button type="button">View Full Logs</button>
+                <button type="button">Override All Access</button>
+              </div>
             </section>
 
             <section class="console-card output-card">
