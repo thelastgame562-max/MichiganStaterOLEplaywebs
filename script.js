@@ -12,6 +12,7 @@ const discordLoginForm = document.querySelector("#discord-login-form");
 const codeLoginForm = document.querySelector("#code-login-form");
 const discordUsernameInput = document.querySelector("#discord-username");
 const accessCodeInput = document.querySelector("#staff-access-code");
+const rememberMeInput = document.querySelector("#remember-me");
 const signinStepDiscord = document.querySelector("#signin-step-discord");
 const signinStepCode = document.querySelector("#signin-step-code");
 const signinUserDisplay = document.querySelector("#signin-user-display");
@@ -114,7 +115,11 @@ const randomCode = (prefix) =>
     .slice(2, 6)
     .toUpperCase()}`;
 
-const currentDiscordUser = () => localStorage.getItem("msrpDiscordUser") || "Unknown user";
+const currentDiscordUser = () =>
+  localStorage.getItem("msrpDiscordUser") ||
+  sessionStorage.getItem("msrpDiscordUserSession") ||
+  "Unknown user";
+const shouldRemember = () => localStorage.getItem("msrpRememberMe") === "true";
 
 const pushOutput = (message) => {
   if (output) {
@@ -138,9 +143,20 @@ const renderOwnerCodes = () => {
     .join("");
 };
 
+const hydrateRememberedUser = () => {
+  if (discordUsernameInput && shouldRemember()) {
+    discordUsernameInput.value = currentDiscordUser();
+  }
+
+  if (rememberMeInput) {
+    rememberMeInput.checked = shouldRemember();
+  }
+};
+
 openSigninButtons.forEach((button) => {
   button.addEventListener("click", () => {
     openSignin();
+    hydrateRememberedUser();
     if (menuPanel) {
       menuPanel.hidden = true;
       menuToggle?.setAttribute("aria-expanded", "false");
@@ -161,7 +177,14 @@ if (discordLoginForm) {
       return;
     }
 
-    localStorage.setItem("msrpDiscordUser", username);
+    if (rememberMeInput?.checked) {
+      localStorage.setItem("msrpDiscordUser", username);
+      localStorage.setItem("msrpRememberMe", "true");
+    } else {
+      sessionStorage.setItem("msrpDiscordUserSession", username);
+      localStorage.removeItem("msrpDiscordUser");
+      localStorage.removeItem("msrpRememberMe");
+    }
 
     if (signinUserDisplay) {
       signinUserDisplay.textContent = `Signed in with Discord as ${username}. Now enter your access code.`;
@@ -198,6 +221,8 @@ if (signoutButton) {
   signoutButton.addEventListener("click", () => {
     localStorage.removeItem("msrpRole");
     localStorage.removeItem("msrpDiscordUser");
+    localStorage.removeItem("msrpRememberMe");
+    sessionStorage.removeItem("msrpDiscordUserSession");
     renderDashboard();
   });
 }
@@ -238,4 +263,5 @@ document.querySelectorAll("[data-tool-form]").forEach((form) => {
 });
 
 renderOwnerCodes();
+hydrateRememberedUser();
 renderDashboard();

@@ -770,6 +770,20 @@ a {
   padding: 16px;
 }
 
+.remember-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #2c2f33;
+  font-weight: 600;
+}
+
+.remember-row input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+}
+
 .discord-button {
   border: 0;
   border-radius: 16px;
