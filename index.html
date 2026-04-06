@@ -25,7 +25,9 @@
         <a href="#rules">Rules</a>
         <a href="#departments">Departments</a>
         <a href="#about">About</a>
+        <a href="#staff-panel">Staff Panel</a>
         <a href="https://discord.gg/N2wBRXS2" target="_blank" rel="noreferrer">Discord</a>
+        <button class="nav-signin" type="button" data-open-signin>Sign In</button>
       </nav>
 
       <div class="menu-wrap">
@@ -40,7 +42,9 @@
           <a href="#rules">Rules</a>
           <a href="#departments">Departments</a>
           <a href="#about">About</a>
+          <a href="#staff-panel">Staff Panel</a>
           <a href="https://discord.gg/N2wBRXS2" target="_blank" rel="noreferrer">Discord</a>
+          <button class="menu-signin" type="button" data-open-signin>Sign In</button>
         </div>
       </div>
     </header>
@@ -75,7 +79,7 @@
         <div class="hero-footer">
           <div class="stats">
             <article>
-              <strong>11000+</strong>
+              <strong>1000+</strong>
               <span>Members</span>
             </article>
             <article>
@@ -248,7 +252,159 @@
           </article>
         </div>
       </section>
+
+      <section class="panel-section" id="staff-panel">
+        <div class="section-heading">
+          <p class="eyebrow">Staff Access</p>
+          <h2>Discord Sign In And Staff Tools</h2>
+          <p>
+            Sign in to unlock the staff dashboard. Staff can access the panel, HR and
+            IA Max can create keys and codes, and SHR gets full access across every
+            website tool.
+          </p>
+        </div>
+
+        <div class="auth-summary">
+          <div class="auth-copy">
+            <span class="about-label">Role Check</span>
+            <h3>Sign in with Discord</h3>
+            <p>
+              This website now includes a Discord-style sign-in flow and role-based
+              dashboard layout. Real Discord role syncing, moderation, and infractions
+              need a backend bot connection to be fully live.
+            </p>
+          </div>
+          <div class="auth-actions">
+            <button class="button button-primary auth-button" type="button" data-open-signin>Sign In With Discord</button>
+            <p id="current-role-label">Current access: Guest</p>
+          </div>
+        </div>
+
+        <div class="dashboard-grid">
+          <article class="dashboard-card">
+            <span class="about-label">Staff Panel</span>
+            <h3>Operations Overview</h3>
+            <ul class="feature-list">
+              <li>Review tickets, staff activity, and active reports</li>
+              <li>Track open moderation cases and roleplay incidents</li>
+              <li>Keep panel access locked to verified staff roles</li>
+            </ul>
+          </article>
+
+          <article class="dashboard-card">
+            <span class="about-label">HR / IA Max</span>
+            <h3>Key And Code Control</h3>
+            <ul class="feature-list">
+              <li>Create invite keys for trusted sign-ups</li>
+              <li>Create private staff onboarding codes</li>
+              <li>Issue infractions and manage internal access</li>
+            </ul>
+          </article>
+
+          <article class="dashboard-card">
+            <span class="about-label">SHR Access</span>
+            <h3>Full Control</h3>
+            <ul class="feature-list">
+              <li>Override all website staff tools</li>
+              <li>Create unlimited access codes and keys</li>
+              <li>Manage warnings, strikes, bans, and kicks in the panel</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="staff-console" data-dashboard hidden>
+          <div class="console-header">
+            <div>
+              <span class="about-label">Live Dashboard</span>
+              <h3 id="dashboard-title">Guest Access</h3>
+            </div>
+            <button class="button button-secondary signout-button" type="button" data-signout>Sign Out</button>
+          </div>
+
+          <div class="console-grid">
+            <section class="console-card" data-role-min="staff">
+              <h4>Staff Panel</h4>
+              <p>Visible to verified staff ranks.</p>
+              <div class="console-actions">
+                <button type="button">View Reports</button>
+                <button type="button">Check Tickets</button>
+                <button type="button">Review Logs</button>
+              </div>
+            </section>
+
+            <section class="console-card" data-role-min="hr">
+              <h4>Infractions</h4>
+              <p>HR / IA Max and SHR can log moderation actions from the dashboard.</p>
+              <form class="tool-form" data-tool-form="infraction">
+                <input type="text" name="member" placeholder="Discord username" required>
+                <select name="action" required>
+                  <option value="Warn">Warn</option>
+                  <option value="Strike">Strike</option>
+                  <option value="Kick">Kick</option>
+                  <option value="Ban">Ban</option>
+                </select>
+                <input type="text" name="reason" placeholder="Reason" required>
+                <button type="submit">Save Infraction</button>
+              </form>
+            </section>
+
+            <section class="console-card" data-role-min="hr">
+              <h4>Create Keys</h4>
+              <p>IA Max and HR can create secure staff access keys.</p>
+              <form class="tool-form" data-tool-form="key">
+                <input type="text" name="label" placeholder="Key label" required>
+                <button type="submit">Generate Key</button>
+              </form>
+            </section>
+
+            <section class="console-card" data-role-min="shr">
+              <h4>Create Join Codes</h4>
+              <p>SHR can create invite codes for people to sign up through the website.</p>
+              <form class="tool-form" data-tool-form="code">
+                <input type="text" name="label" placeholder="Code purpose" required>
+                <button type="submit">Generate Code</button>
+              </form>
+            </section>
+
+            <section class="console-card" data-role-min="shr">
+              <h4>SHR Controls</h4>
+              <p>Highest-rank dashboard tools with full website access.</p>
+              <div class="console-actions">
+                <button type="button">Open Global Panel</button>
+                <button type="button">Approve Staff</button>
+                <button type="button">Override Access</button>
+              </div>
+            </section>
+
+            <section class="console-card output-card">
+              <h4>Generated Output</h4>
+              <div id="generated-output">
+                <p>No actions yet. Sign in and use the tools to create keys, codes, or infractions.</p>
+              </div>
+            </section>
+          </div>
+        </div>
+      </section>
     </main>
+  </div>
+
+  <div class="signin-modal" id="signin-modal" hidden>
+    <div class="signin-backdrop" data-close-signin></div>
+    <div class="signin-dialog" role="dialog" aria-modal="true" aria-labelledby="signin-title">
+      <button class="close-modal" type="button" aria-label="Close sign in" data-close-signin>&times;</button>
+      <span class="about-label">Discord Access</span>
+      <h3 id="signin-title">Sign In With Discord</h3>
+      <p>
+        Choose the access level you want to preview. This website dashboard is ready
+        for real Discord role syncing later.
+      </p>
+      <div class="role-picker">
+        <button type="button" class="role-choice" data-role="member">Member</button>
+        <button type="button" class="role-choice" data-role="staff">Staff</button>
+        <button type="button" class="role-choice" data-role="hr">HR / IA Max</button>
+        <button type="button" class="role-choice" data-role="shr">SHR</button>
+      </div>
+    </div>
   </div>
   <script src="script.js"></script>
 </body>
