@@ -2,6 +2,7 @@ import express from "express";
 import { config } from "./config.js";
 import { createCode, getAllCodes, getCode, removeCode } from "./code-store.js";
 import { getHighestRole } from "./role-utils.js";
+import { queueErlcCommand } from "./erlc-panel.js";
 
 const app = express();
 app.use(express.json());
@@ -156,6 +157,17 @@ app.post("/api/auth/code", (req, res) => {
   }
 
   res.json({ ok: true, role: match.role });
+});
+
+app.post("/api/erlc/command", (req, res) => {
+  const { command, player, reason, actor = "website" } = req.body;
+
+  if (!command || !player || !reason) {
+    res.status(400).json({ ok: false, error: "command, player, and reason are required" });
+    return;
+  }
+
+  res.json(queueErlcCommand({ command, player, reason, actor }));
 });
 
 app.listen(3001, () => {

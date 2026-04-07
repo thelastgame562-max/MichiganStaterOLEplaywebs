@@ -310,6 +310,14 @@ document.querySelectorAll("[data-tool-form]").forEach((form) => {
       message = `Join code created for ${formData.get("label")}: ${randomCode("MSRPCODE")}`;
     }
 
+    if (type === "command-code") {
+      message = `Command panel code created for ${formData.get("label")}: ${randomCode("ERLCCMD")}`;
+    }
+
+    if (type === "erlc-command") {
+      message = `ER:LC ${formData.get("command")} queued for ${formData.get("player")} - ${formData.get("reason")} (API key required for live send)`;
+    }
+
     if (type === "chat") {
       message = `${currentDiscordUser()}: ${formData.get("message")}`;
       pushChat(message);

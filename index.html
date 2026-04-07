@@ -405,6 +405,25 @@
               </div>
             </section>
 
+            <section class="console-card" data-role-min="owner" id="command-panel">
+              <h4>ER:LC Command Panel</h4>
+              <p>Owner and Founder can create command panel codes and use ER:LC-style moderation tools when the API key is added.</p>
+              <form class="tool-form" data-tool-form="command-code">
+                <input type="text" name="label" placeholder="Command panel code label" required>
+                <button type="submit">Create Command Code</button>
+              </form>
+              <form class="tool-form" data-tool-form="erlc-command">
+                <select name="command" required>
+                  <option value="Kick">Kick</option>
+                  <option value="Ban">Ban</option>
+                  <option value="Warn">Warn</option>
+                </select>
+                <input type="text" name="player" placeholder="ER:LC player name" required>
+                <input type="text" name="reason" placeholder="Reason" required>
+                <button type="submit">Queue Command</button>
+              </form>
+            </section>
+
             <section class="console-card" data-role-min="owner">
               <h4>Logs And Discord Logs</h4>
               <p>Owner can access website logs and Discord-style moderation logs.</p>
