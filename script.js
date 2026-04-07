@@ -3,6 +3,7 @@ const menuPanel = document.querySelector(".menu-panel");
 const signinModal = document.querySelector("#signin-modal");
 const closeSigninButtons = document.querySelectorAll("[data-close-signin]");
 const dashboard = document.querySelector("[data-dashboard]");
+const roleOverview = document.querySelector("[data-role-overview]");
 const dashboardTitle = document.querySelector("#dashboard-title");
 const currentRoleLabel = document.querySelector("#current-role-label");
 const signoutButton = document.querySelector("[data-signout]");
@@ -112,6 +113,10 @@ const renderDashboard = () => {
     dashboard.hidden = currentRole === "guest" || currentRole === "member";
   }
 
+  if (roleOverview) {
+    roleOverview.hidden = currentRole === "guest" || currentRole === "member";
+  }
+
   document.querySelectorAll("[data-role-min]").forEach((card) => {
     const minimumRole = card.getAttribute("data-role-min");
     card.hidden = !canAccess(currentRole, minimumRole);
@@ -161,6 +166,21 @@ const renderOwnerCodes = () => {
     .join("");
 };
 
+const routeToRolePanel = (role) => {
+  const targetByRole = {
+    staff: "#staff-chat",
+    hr: "#hr-panel",
+    shr: "#shr-panel",
+    owner: "#owner-panel",
+    founder: "#founder-panel"
+  };
+
+  const target = targetByRole[role];
+  if (target) {
+    window.location.hash = target;
+  }
+};
+
 const syncRoleFromDiscordAuth = () => {
   if (authParams.get("auth") !== "success") {
     return;
@@ -175,15 +195,16 @@ const syncRoleFromDiscordAuth = () => {
 
   sessionStorage.setItem("msrpDiscordUserSession", username);
 
-  if (role === "staff" || role === "hr" || role === "shr") {
-    localStorage.setItem("msrpRole", role);
-  } else {
-    localStorage.removeItem("msrpRole");
-  }
+    if (role === "staff" || role === "hr" || role === "shr") {
+      localStorage.setItem("msrpRole", role);
+    } else {
+      localStorage.removeItem("msrpRole");
+    }
 
-  pushOutput(`${username} signed in with Discord and was tracked as ${roleNames[role] || role}.`);
-  window.history.replaceState({}, document.title, window.location.pathname);
-};
+    pushOutput(`${username} signed in with Discord and was tracked as ${roleNames[role] || role}.`);
+    routeToRolePanel(role);
+    window.history.replaceState({}, document.title, window.location.pathname);
+  };
 
 const hydrateRememberedUser = () => {
   if (discordUsernameInput && shouldRemember()) {
@@ -239,12 +260,13 @@ if (codeLoginForm) {
       return;
     }
 
-    localStorage.setItem("msrpRole", role);
-    renderDashboard();
-    pushOutput(`${currentDiscordUser()} signed in successfully with ${roleNames[role]} access.`);
-    closeSignin();
-    codeLoginForm.reset();
-    discordLoginForm.reset();
+      localStorage.setItem("msrpRole", role);
+      renderDashboard();
+      pushOutput(`${currentDiscordUser()} signed in successfully with ${roleNames[role]} access.`);
+      routeToRolePanel(role);
+      closeSignin();
+      codeLoginForm.reset();
+      discordLoginForm.reset();
   });
 }
 
