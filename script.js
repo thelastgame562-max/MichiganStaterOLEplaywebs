@@ -1,7 +1,6 @@
 const menuToggle = document.querySelector(".menu-toggle");
 const menuPanel = document.querySelector(".menu-panel");
 const signinModal = document.querySelector("#signin-modal");
-const openSigninButtons = document.querySelectorAll("[data-open-signin]");
 const closeSigninButtons = document.querySelectorAll("[data-close-signin]");
 const dashboard = document.querySelector("[data-dashboard]");
 const dashboardTitle = document.querySelector("#dashboard-title");
@@ -20,6 +19,7 @@ const signinStepCode = document.querySelector("#signin-step-code");
 const signinUserDisplay = document.querySelector("#signin-user-display");
 const staffChatBox = document.querySelector("#staff-chat-box");
 const ownerCodeList = document.querySelector("#owner-code-list");
+const authParams = new URLSearchParams(window.location.search);
 const roleOrder = ["guest", "member", "staff", "hr", "shr", "owner", "founder"];
 const roleNames = {
   guest: "Guest",
@@ -161,6 +161,30 @@ const renderOwnerCodes = () => {
     .join("");
 };
 
+const syncRoleFromDiscordAuth = () => {
+  if (authParams.get("auth") !== "success") {
+    return;
+  }
+
+  const username = authParams.get("discord_user");
+  const role = authParams.get("discord_role");
+
+  if (!username || !role) {
+    return;
+  }
+
+  sessionStorage.setItem("msrpDiscordUserSession", username);
+
+  if (role === "staff" || role === "hr" || role === "shr") {
+    localStorage.setItem("msrpRole", role);
+  } else {
+    localStorage.removeItem("msrpRole");
+  }
+
+  pushOutput(`${username} signed in with Discord and was tracked as ${roleNames[role] || role}.`);
+  window.history.replaceState({}, document.title, window.location.pathname);
+};
+
 const hydrateRememberedUser = () => {
   if (discordUsernameInput && shouldRemember()) {
     discordUsernameInput.value = currentDiscordUser();
@@ -170,17 +194,6 @@ const hydrateRememberedUser = () => {
     rememberMeInput.checked = shouldRemember();
   }
 };
-
-openSigninButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    openSignin();
-    hydrateRememberedUser();
-    if (menuPanel) {
-      menuPanel.hidden = true;
-      menuToggle?.setAttribute("aria-expanded", "false");
-    }
-  });
-});
 
 closeSigninButtons.forEach((button) => {
   button.addEventListener("click", closeSignin);
@@ -288,4 +301,5 @@ document.querySelectorAll("[data-tool-form]").forEach((form) => {
 
 renderOwnerCodes();
 hydrateRememberedUser();
+syncRoleFromDiscordAuth();
 renderDashboard();

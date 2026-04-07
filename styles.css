@@ -128,6 +128,9 @@ a {
 
 .nav-signin,
 .menu-signin {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   border: 1px solid rgba(93, 231, 219, 0.24);
   border-radius: 999px;
   background: rgba(93, 231, 219, 0.1);
@@ -145,6 +148,11 @@ a {
   width: 100%;
   margin-top: 8px;
   padding: 12px 14px;
+}
+
+.nav-signin-link,
+.menu-signin-link {
+  text-decoration: none;
 }
 
 .menu-panel [hidden] {

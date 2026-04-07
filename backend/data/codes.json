@@ -1,0 +1,42 @@
+[
+  {
+    "code": "STAFF-ENTRY-7421",
+    "role": "staff",
+    "createdBy": "system"
+  },
+  {
+    "code": "HRI-AMAX-5518",
+    "role": "hr",
+    "createdBy": "system"
+  },
+  {
+    "code": "SHR-CTRL-9084",
+    "role": "shr",
+    "createdBy": "system"
+  },
+  {
+    "code": "OWNER-ALPHA-4401",
+    "role": "owner",
+    "createdBy": "system"
+  },
+  {
+    "code": "OWNER-BRAVO-5512",
+    "role": "owner",
+    "createdBy": "system"
+  },
+  {
+    "code": "OWNER-CHARLIE-6623",
+    "role": "owner",
+    "createdBy": "system"
+  },
+  {
+    "code": "OWNER-DELTA-7734",
+    "role": "owner",
+    "createdBy": "system"
+  },
+  {
+    "code": "FOUNDER-WIST-9001",
+    "role": "founder",
+    "createdBy": "system"
+  }
+]
