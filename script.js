@@ -22,6 +22,8 @@ const staffChatBox = document.querySelector("#staff-chat-box");
 const ownerCodeList = document.querySelector("#owner-code-list");
 const authParams = new URLSearchParams(window.location.search);
 const panelSection = document.querySelector("[data-panel-section]");
+const elevatedCodeForm = document.querySelector("#elevated-code-form");
+const elevatedAccessCodeInput = document.querySelector("#elevated-access-code");
 const roleOrder = ["guest", "member", "staff", "hr", "shr", "owner", "founder"];
 const roleNames = {
   guest: "Guest",
@@ -33,6 +35,7 @@ const roleNames = {
   founder: "Founder"
 };
 const panelRequirements = {
+  code: "member",
   staff: "staff",
   hr: "hr",
   shr: "shr",
@@ -40,6 +43,7 @@ const panelRequirements = {
   founder: "founder"
 };
 const panelTargets = {
+  "#code-panel": "member",
   "#staff-panel": "staff",
   "#staff-chat": "staff",
   "#hr-panel": "hr",
@@ -49,21 +53,26 @@ const panelTargets = {
   "#command-panel": "owner"
 };
 const accessCodes = {
-  "STAFF-ENTRY-7421": "staff",
-  "HRI-AMAX-5518": "hr",
-  "SHR-CTRL-9084": "shr",
   "OWNER-ALPHA-4401": "owner",
   "OWNER-BRAVO-5512": "owner",
   "OWNER-CHARLIE-6623": "owner",
   "OWNER-DELTA-7734": "owner",
-  "FOUNDER-WIST-9001": "founder"
+  "OWNER-ECHO-8845": "owner",
+  "FOUNDER-WIST-9001": "founder",
+  "FOUNDER-MSRP-9222": "founder",
+  "FOUNDER-PRIME-7311": "founder",
+  "FOUNDER-OMEGA-6184": "founder"
 };
 const ownerCodes = [
   "OWNER-ALPHA-4401",
   "OWNER-BRAVO-5512",
   "OWNER-CHARLIE-6623",
   "OWNER-DELTA-7734",
-  "FOUNDER-WIST-9001"
+  "OWNER-ECHO-8845",
+  "FOUNDER-WIST-9001",
+  "FOUNDER-MSRP-9222",
+  "FOUNDER-PRIME-7311",
+  "FOUNDER-OMEGA-6184"
 ];
 
 if (menuToggle && menuPanel) {
@@ -120,7 +129,7 @@ const renderDashboard = () => {
   }
 
   if (dashboard) {
-    dashboard.hidden = currentRole === "guest" || currentRole === "member";
+    dashboard.hidden = currentRole === "guest";
   }
 
   if (roleOverview) {
@@ -138,7 +147,7 @@ const renderDashboard = () => {
   });
 
   signoutButtons.forEach((button) => {
-    button.hidden = currentRole === "guest" || currentRole === "member";
+    button.hidden = currentRole === "guest";
   });
 };
 
@@ -223,11 +232,11 @@ const syncRoleFromDiscordAuth = () => {
 
   sessionStorage.setItem("msrpDiscordUserSession", username);
 
-    if (role === "staff" || role === "hr" || role === "shr") {
-      localStorage.setItem("msrpRole", role);
-    } else {
-      localStorage.removeItem("msrpRole");
-    }
+  if (role === "staff" || role === "hr" || role === "shr") {
+    localStorage.setItem("msrpRole", role);
+  } else {
+    localStorage.setItem("msrpRole", "member");
+  }
 
     pushOutput(`${username} signed in with Discord and was tracked as ${roleNames[role] || role}.`);
     routeToRolePanel(role);
@@ -309,6 +318,31 @@ const handleSignout = () => {
     renderDashboard();
     updatePanelSectionVisibility();
 };
+
+if (elevatedCodeForm) {
+  elevatedCodeForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const code = elevatedAccessCodeInput?.value.trim().toUpperCase() || "";
+    const currentRole = localStorage.getItem("msrpRole") || "guest";
+    const role = accessCodes[code];
+
+    if (!role) {
+      pushOutput(`Access denied for ${currentDiscordUser()} - invalid owner/founder code.`);
+      return;
+    }
+
+    if (currentRole === "guest") {
+      pushOutput("You must sign in with Discord before using a code.");
+      return;
+    }
+
+    localStorage.setItem("msrpRole", role);
+    renderDashboard();
+    routeToRolePanel(role);
+    pushOutput(`${currentDiscordUser()} unlocked ${roleNames[role]} access with a code.`);
+    elevatedCodeForm.reset();
+  });
+}
 
 if (signoutButton) {
   signoutButton.addEventListener("click", handleSignout);

@@ -40,6 +40,7 @@
           <a href="#departments">Departments</a>
           <a href="#rules">Rules</a>
           <a href="#about">About</a>
+          <a href="#code-panel" data-panel-link="code" hidden>Code Panel</a>
           <a href="#staff-panel" data-panel-link="staff" hidden>Staff Panel</a>
           <a href="#staff-chat" data-panel-link="staff" hidden>Staff Chat</a>
           <a href="#hr-panel" data-panel-link="hr" hidden>HR Panel</a>
@@ -325,6 +326,15 @@
           </div>
 
           <div class="console-grid">
+            <section class="console-card" data-role-min="member" id="code-panel">
+              <h4>Code Panel</h4>
+              <p>Enter an Owner or Founder code here after signing in with Discord to unlock higher access.</p>
+              <form class="tool-form" id="elevated-code-form">
+                <input type="text" id="elevated-access-code" placeholder="Enter owner or founder code" required>
+                <button type="submit">Unlock Access</button>
+              </form>
+            </section>
+
             <section class="console-card" data-role-min="staff">
               <h4>Staff Panel</h4>
               <p>Visible to verified staff ranks.</p>
@@ -384,7 +394,7 @@
 
             <section class="console-card" data-role-min="shr" id="shr-panel">
               <h4>Create Join Codes</h4>
-              <p>SHR can create invite codes for people to sign up through the website.</p>
+              <p>SHR, Owner, and Founder can create invite codes for people to sign up through the website.</p>
               <form class="tool-form" data-tool-form="code">
                 <input type="text" name="label" placeholder="Code purpose" required>
                 <button type="submit">Generate Code</button>
@@ -411,9 +421,9 @@
               </div>
             </section>
 
-            <section class="console-card" data-role-min="owner" id="command-panel">
+            <section class="console-card" data-role-min="shr" id="command-panel">
               <h4>ER:LC Command Panel</h4>
-              <p>Owner and Founder can create command panel codes and use ER:LC-style moderation tools when the API key is added.</p>
+              <p>SHR, Owner, and Founder can create command panel codes and use ER:LC-style moderation tools when the API key is added.</p>
               <form class="tool-form" data-tool-form="command-code">
                 <input type="text" name="label" placeholder="Command panel code label" required>
                 <button type="submit">Create Command Code</button>
@@ -441,7 +451,7 @@
 
             <section class="console-card" data-role-min="owner">
               <h4>Owner Codes</h4>
-              <p>These are the four owner codes and the founder code stored on the site.</p>
+              <p>These are the five Owner codes and four Founder codes stored on the site.</p>
               <div class="code-list" id="owner-code-list"></div>
             </section>
 
