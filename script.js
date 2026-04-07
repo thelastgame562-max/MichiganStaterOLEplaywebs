@@ -21,6 +21,7 @@ const signinUserDisplay = document.querySelector("#signin-user-display");
 const staffChatBox = document.querySelector("#staff-chat-box");
 const ownerCodeList = document.querySelector("#owner-code-list");
 const authParams = new URLSearchParams(window.location.search);
+const panelSection = document.querySelector("[data-panel-section]");
 const roleOrder = ["guest", "member", "staff", "hr", "shr", "owner", "founder"];
 const roleNames = {
   guest: "Guest",
@@ -37,6 +38,15 @@ const panelRequirements = {
   shr: "shr",
   owner: "owner",
   founder: "founder"
+};
+const panelTargets = {
+  "#staff-panel": "staff",
+  "#staff-chat": "staff",
+  "#hr-panel": "hr",
+  "#shr-panel": "shr",
+  "#owner-panel": "owner",
+  "#founder-panel": "founder",
+  "#command-panel": "owner"
 };
 const accessCodes = {
   "STAFF-ENTRY-7421": "staff",
@@ -132,6 +142,23 @@ const renderDashboard = () => {
   });
 };
 
+const updatePanelSectionVisibility = () => {
+  if (!panelSection) {
+    return;
+  }
+
+  const currentRole = localStorage.getItem("msrpRole") || "guest";
+  const target = window.location.hash;
+  const minimumRole = panelTargets[target];
+
+  if (!minimumRole || !canAccess(currentRole, minimumRole)) {
+    panelSection.hidden = true;
+    return;
+  }
+
+  panelSection.hidden = false;
+};
+
 const randomCode = (prefix) =>
   `${prefix}-${Math.random().toString(36).slice(2, 6).toUpperCase()}-${Math.random()
     .toString(36)
@@ -178,6 +205,7 @@ const routeToRolePanel = (role) => {
   const target = targetByRole[role];
   if (target) {
     window.location.hash = target;
+    updatePanelSectionVisibility();
   }
 };
 
@@ -275,7 +303,11 @@ const handleSignout = () => {
     localStorage.removeItem("msrpDiscordUser");
     localStorage.removeItem("msrpRememberMe");
     sessionStorage.removeItem("msrpDiscordUserSession");
+    if (window.location.hash in panelTargets) {
+      window.location.hash = "#home";
+    }
     renderDashboard();
+    updatePanelSectionVisibility();
 };
 
 if (signoutButton) {
@@ -329,7 +361,9 @@ document.querySelectorAll("[data-tool-form]").forEach((form) => {
   });
 });
 
+window.addEventListener("hashchange", updatePanelSectionVisibility);
 renderOwnerCodes();
 hydrateRememberedUser();
 syncRoleFromDiscordAuth();
 renderDashboard();
+updatePanelSectionVisibility();
