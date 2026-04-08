@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Michigan State Roleplay Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="portal.css">
+</head>
+<body>
+  <main class="portal-shell">
+    <section class="login-page" id="login-page">
+      <div class="login-card">
+        <span class="portal-badge">Michigan State Roleplay</span>
+        <h1>Staff Portal Login</h1>
+        <p>Enter your username, password, and access code to open the correct staff panel.</p>
+        <form id="portal-login-form" class="portal-form">
+          <input type="text" id="portal-username" placeholder="Username" required>
+          <input type="password" id="portal-password" placeholder="Password" required>
+          <input type="text" id="portal-code" placeholder="Access code" required>
+          <button type="submit">Enter Portal</button>
+        </form>
+        <a class="back-link" href="index.html">Back To Home</a>
+      </div>
+    </section>
+
+    <section class="dashboard-page" id="dashboard-page" hidden>
+      <header class="portal-header">
+        <div>
+          <span class="portal-badge">Michigan State Roleplay</span>
+          <h2 id="portal-role-title">Staff Panel</h2>
+          <p id="portal-user-line">Signed in.</p>
+        </div>
+        <nav class="portal-tabs">
+          <button type="button" data-tab-target="staff">Staff Chat</button>
+          <button type="button" data-tab-target="hr">HR Panel</button>
+          <button type="button" data-tab-target="shr">SHR Panel</button>
+          <button type="button" data-tab-target="owner">Owner Panel</button>
+          <button type="button" data-tab-target="channel">Channel Feed</button>
+          <button type="button" id="portal-signout">Sign Out</button>
+        </nav>
+      </header>
+
+      <section class="portal-grid">
+        <div class="panel-column wide">
+          <article class="portal-panel panel-chat" data-tab="staff">
+            <div class="panel-heading">
+              <h3>Massive Staff Chat</h3>
+              <p>Private staff discussion board styled like a staff Discord room.</p>
+            </div>
+            <div class="chat-window" id="staff-chat-window"></div>
+            <form class="portal-form inline-form" id="staff-chat-form">
+              <input type="text" id="staff-chat-input" placeholder="Type a staff message" required>
+              <button type="submit">Send</button>
+            </form>
+          </article>
+
+          <article class="portal-panel" data-tab="hr" hidden>
+            <div class="panel-heading">
+              <h3>HR Panel</h3>
+              <p>Manage infractions, promotions, and staff review actions.</p>
+            </div>
+            <div class="tool-grid">
+              <form class="portal-form" id="infraction-form">
+                <input type="text" id="infraction-user" placeholder="Username" required>
+                <select id="infraction-type" required>
+                  <option value="Warning">Warning</option>
+                  <option value="Strike">Strike</option>
+                  <option value="Kick">Kick</option>
+                  <option value="Ban">Ban</option>
+                </select>
+                <input type="text" id="infraction-reason" placeholder="Reason" required>
+                <input type="text" id="infraction-notes" placeholder="Notes" required>
+                <button type="submit">Issue Infraction</button>
+              </form>
+              <form class="portal-form" id="promotion-form">
+                <input type="text" id="promotion-user" placeholder="Username" required>
+                <input type="text" id="promotion-rank" placeholder="Promoted rank" required>
+                <input type="text" id="promotion-notes" placeholder="Notes" required>
+                <button type="submit">Log Promotion</button>
+              </form>
+            </div>
+          </article>
+
+          <article class="portal-panel" data-tab="shr" hidden>
+            <div class="panel-heading">
+              <h3>SHR Panel</h3>
+              <p>Generate Staff and HR codes, and move codes upward to HR or SHR.</p>
+            </div>
+            <div class="tool-grid">
+              <form class="portal-form" id="create-code-form">
+                <input type="text" id="new-code-label" placeholder="Code label" required>
+                <select id="new-code-rank" required>
+                  <option value="staff">Staff</option>
+                  <option value="hr">HR</option>
+                  <option value="shr">SHR</option>
+                </select>
+                <button type="submit">Generate Code</button>
+              </form>
+              <form class="portal-form" id="promote-code-form">
+                <input type="text" id="existing-code" placeholder="Existing code" required>
+                <select id="promote-code-rank" required>
+                  <option value="hr">Move To HR</option>
+                  <option value="shr">Move To SHR</option>
+                </select>
+                <button type="submit">Move Code Up</button>
+              </form>
+            </div>
+            <div class="code-table" id="shr-code-table"></div>
+          </article>
+
+          <article class="portal-panel" data-tab="owner" hidden>
+            <div class="panel-heading">
+              <h3>Owner Panel</h3>
+              <p>Access everything, generate all ranks, and remove any code from the system.</p>
+            </div>
+            <div class="tool-grid">
+              <form class="portal-form" id="owner-code-form">
+                <input type="text" id="owner-code-label" placeholder="Code label" required>
+                <select id="owner-code-rank" required>
+                  <option value="staff">Staff</option>
+                  <option value="hr">HR</option>
+                  <option value="shr">SHR</option>
+                  <option value="owner">Owner</option>
+                  <option value="founder">Founder</option>
+                </select>
+                <button type="submit">Generate Rank Code</button>
+              </form>
+              <form class="portal-form" id="delete-code-form">
+                <input type="text" id="delete-code-value" placeholder="Code to delete" required>
+                <button type="submit">Delete Code</button>
+              </form>
+            </div>
+            <div class="code-table" id="owner-code-table"></div>
+          </article>
+        </div>
+
+        <aside class="panel-column">
+          <article class="portal-panel panel-feed" data-tab="channel">
+            <div class="panel-heading">
+              <h3>Michigan State Roleplay Channel Feed</h3>
+              <p>Infractions and promotions appear here in a Discord-channel style feed.</p>
+            </div>
+            <div class="channel-feed" id="channel-feed"></div>
+          </article>
+        </aside>
+      </section>
+    </section>
+  </main>
+
+  <script src="portal.js"></script>
+</body>
+</html>
