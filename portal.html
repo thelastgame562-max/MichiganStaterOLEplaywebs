@@ -37,7 +37,9 @@
           <button type="button" data-tab-target="staff">Staff Chat</button>
           <button type="button" data-tab-target="hr">HR Panel</button>
           <button type="button" data-tab-target="shr">SHR Panel</button>
+          <button type="button" data-tab-target="command">Command Panel</button>
           <button type="button" data-tab-target="owner">Owner Panel</button>
+          <button type="button" data-tab-target="founder">Founder Panel</button>
           <button type="button" data-tab-target="channel">Channel Feed</button>
           <button type="button" id="portal-signout">Sign Out</button>
         </nav>
@@ -60,8 +62,10 @@
           <article class="portal-panel" data-tab="hr" hidden>
             <div class="panel-heading">
               <h3>HR Panel</h3>
-              <p>Manage infractions, promotions, and staff review actions.</p>
+              <p>HR tools are controlled by the code used to sign in. This panel only unlocks actions your code allows.</p>
             </div>
+            <p class="permission-note" id="infraction-note">This code does not allow infractions.</p>
+            <p class="permission-note" id="promotion-note">This code does not allow promotions.</p>
             <div class="tool-grid">
               <form class="portal-form" id="infraction-form">
                 <input type="text" id="infraction-user" placeholder="Username" required>
@@ -87,7 +91,7 @@
           <article class="portal-panel" data-tab="shr" hidden>
             <div class="panel-heading">
               <h3>SHR Panel</h3>
-              <p>Generate Staff and HR codes, and move codes upward to HR or SHR.</p>
+              <p>Generate Staff, HR, and SHR codes. Decide whether each code can infract or promote before it is given out.</p>
             </div>
             <div class="tool-grid">
               <form class="portal-form" id="create-code-form">
@@ -96,7 +100,17 @@
                   <option value="staff">Staff</option>
                   <option value="hr">HR</option>
                   <option value="shr">SHR</option>
+                  <option value="owner">Owner</option>
+                  <option value="founder">Founder</option>
                 </select>
+                <label class="check-row">
+                  <input type="checkbox" id="new-code-infract">
+                  <span>Allowed to infract?</span>
+                </label>
+                <label class="check-row">
+                  <input type="checkbox" id="new-code-promote">
+                  <span>Allowed to promote?</span>
+                </label>
                 <button type="submit">Generate Code</button>
               </form>
               <form class="portal-form" id="promote-code-form">
@@ -104,17 +118,41 @@
                 <select id="promote-code-rank" required>
                   <option value="hr">Move To HR</option>
                   <option value="shr">Move To SHR</option>
+                  <option value="owner">Move To Owner</option>
+                  <option value="founder">Move To Founder</option>
                 </select>
                 <button type="submit">Move Code Up</button>
               </form>
             </div>
+            <form class="portal-form code-lookup-form" id="manage-code-form">
+              <input type="text" id="manage-code-value" placeholder="Enter code to manage" required>
+              <button type="submit">Open Code Manager</button>
+            </form>
             <div class="code-table" id="shr-code-table"></div>
+          </article>
+
+          <article class="portal-panel" data-tab="command" hidden>
+            <div class="panel-heading">
+              <h3>Command Panel</h3>
+              <p>Only SHR, Owner, and Founder can queue command actions from the portal.</p>
+            </div>
+            <form class="portal-form" id="command-form">
+              <select id="command-type" required>
+                <option value="Warn">Warn</option>
+                <option value="Strike">Strike</option>
+                <option value="Kick">Kick</option>
+                <option value="Ban">Ban</option>
+              </select>
+              <input type="text" id="command-user" placeholder="Username" required>
+              <input type="text" id="command-reason" placeholder="Reason" required>
+              <button type="submit">Queue Command</button>
+            </form>
           </article>
 
           <article class="portal-panel" data-tab="owner" hidden>
             <div class="panel-heading">
               <h3>Owner Panel</h3>
-              <p>Access everything, generate all ranks, and remove any code from the system.</p>
+              <p>Owners can generate all ranks, remove codes, and decide if each code can infract or promote.</p>
             </div>
             <div class="tool-grid">
               <form class="portal-form" id="owner-code-form">
@@ -126,6 +164,14 @@
                   <option value="owner">Owner</option>
                   <option value="founder">Founder</option>
                 </select>
+                <label class="check-row">
+                  <input type="checkbox" id="owner-code-infract">
+                  <span>Allowed to infract?</span>
+                </label>
+                <label class="check-row">
+                  <input type="checkbox" id="owner-code-promote">
+                  <span>Allowed to promote?</span>
+                </label>
                 <button type="submit">Generate Rank Code</button>
               </form>
               <form class="portal-form" id="delete-code-form">
@@ -134,6 +180,46 @@
               </form>
             </div>
             <div class="code-table" id="owner-code-table"></div>
+          </article>
+
+          <article class="portal-panel" data-tab="founder" hidden>
+            <div class="panel-heading">
+              <h3>Founder Panel</h3>
+              <p>Founder access overrides every panel and keeps full control of the portal.</p>
+            </div>
+            <div class="code-table" id="founder-code-table"></div>
+          </article>
+
+          <article class="portal-panel editor-panel" id="code-editor-panel" hidden>
+            <div class="panel-heading">
+              <h3>Code Manager</h3>
+              <p>Update a code's promo access, infraction access, rank, or delete it completely.</p>
+            </div>
+            <div class="permission-note" id="code-editor-summary">Enter a code from the SHR or Owner tools to manage it here.</div>
+            <form class="portal-form" id="code-editor-form">
+              <input type="text" id="editor-code-display" placeholder="Code" readonly>
+              <input type="text" id="editor-code-label" placeholder="Code label" required>
+              <select id="editor-code-role" required>
+                <option value="staff">Staff</option>
+                <option value="hr">HR</option>
+                <option value="shr">SHR</option>
+                <option value="owner">Owner</option>
+                <option value="founder">Founder</option>
+              </select>
+              <label class="check-row">
+                <input type="checkbox" id="editor-code-infract">
+                <span>Infraction access</span>
+              </label>
+              <label class="check-row">
+                <input type="checkbox" id="editor-code-promote">
+                <span>Promo access</span>
+              </label>
+              <button type="submit">Save Code Changes</button>
+            </form>
+            <div class="editor-actions">
+              <button type="button" class="secondary-button" id="editor-delete-code">Delete Code</button>
+              <button type="button" class="secondary-button" id="editor-close">Continue Back To Panels</button>
+            </div>
           </article>
         </div>
 
@@ -150,6 +236,6 @@
     </section>
   </main>
 
-  <script src="portal.js"></script>
+  <script src="portal-app.js"></script>
 </body>
 </html>
