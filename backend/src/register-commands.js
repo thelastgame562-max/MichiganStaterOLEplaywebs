@@ -10,7 +10,7 @@ const commands = [
     ),
   new SlashCommandBuilder()
     .setName("infractions")
-    .setDescription("Log a warning, strike, kick, or ban.")
+    .setDescription("Log a warning, strike, suspension, or termination.")
     .addUserOption((option) =>
       option.setName("user").setDescription("Target user").setRequired(true)
     )
@@ -22,8 +22,8 @@ const commands = [
         .addChoices(
           { name: "warn", value: "warn" },
           { name: "strike", value: "strike" },
-          { name: "kick", value: "kick" },
-          { name: "ban", value: "ban" }
+          { name: "suspension", value: "suspension" },
+          { name: "termination", value: "termination" }
         )
     )
     .addStringOption((option) =>

@@ -72,7 +72,14 @@ client.on("interactionCreate", async (interaction) => {
     const user = interaction.options.getUser("user", true);
     const action = interaction.options.getString("action", true);
     const reason = interaction.options.getString("reason", true);
-    const log = `**${action.toUpperCase()}** for ${user.tag}\nReason: ${reason}\nBy: ${interaction.user.tag}`;
+    const member = await interaction.guild.members.fetch(user.id).catch(() => null);
+    const targetRole = member ? getHighestRole(member) : "member";
+    const log =
+      `**${action.toUpperCase()}** for ${user.tag}\n` +
+      `Reason: ${reason}\n` +
+      `Target Role: ${targetRole}\n` +
+      `By: ${interaction.user.tag}\n` +
+      `Actor Role: ${actorRole}`;
 
     await sendToChannel(config.channels.infractions, log);
     await sendToChannel(config.channels.discordLogs, log);
@@ -89,7 +96,13 @@ client.on("interactionCreate", async (interaction) => {
 
     const user = interaction.options.getUser("user", true);
     const rank = interaction.options.getString("rank", true);
-    const message = `**PROMOTION** ${user.tag} -> ${rank}\nBy: ${interaction.user.tag}`;
+    const member = await interaction.guild.members.fetch(user.id).catch(() => null);
+    const targetRole = member ? getHighestRole(member) : "member";
+    const message =
+      `**PROMOTION** ${user.tag} -> ${rank}\n` +
+      `Current Role: ${targetRole}\n` +
+      `By: ${interaction.user.tag}\n` +
+      `Actor Role: ${actorRole}`;
     await sendToChannel(config.channels.discordLogs, message);
     await dmUser(user, `You were promoted to ${rank} in Michigan State Roleplay.`);
     await interaction.reply({ content: `Promotion logged for ${user.tag}.`, ephemeral: true });

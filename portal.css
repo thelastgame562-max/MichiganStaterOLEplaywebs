@@ -32,6 +32,10 @@ a { color: inherit; }
   margin: 0 auto;
 }
 
+#public-support-page {
+  margin-top: 22px;
+}
+
 .login-card,
 .portal-panel,
 .portal-header {
@@ -83,6 +87,7 @@ a { color: inherit; }
 }
 
 .portal-form input,
+.portal-form textarea,
 .portal-form select,
 .portal-form button {
   width: 100%;
@@ -92,10 +97,16 @@ a { color: inherit; }
 }
 
 .portal-form input,
+.portal-form textarea,
 .portal-form select {
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(255, 255, 255, 0.05);
   color: var(--text);
+}
+
+.portal-form textarea {
+  min-height: 160px;
+  resize: vertical;
 }
 
 .portal-form button {
@@ -277,6 +288,39 @@ a { color: inherit; }
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
+}
+
+.support-panel {
+  background: #ffffff;
+  color: #101516;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.support-panel .panel-heading p,
+.support-panel .code-row,
+.support-panel .feed-card span {
+  color: #334044;
+}
+
+.support-panel .panel-heading h3,
+.support-panel .feed-card strong {
+  color: #101516;
+}
+
+.support-panel .portal-form input,
+.support-panel .portal-form textarea,
+.support-panel .portal-form button {
+  color: #101516;
+}
+
+.support-panel .portal-form input,
+.support-panel .portal-form textarea {
+  background: #f5f7f8;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.support-panel .code-row {
+  background: #f5f7f8;
 }
 
 @media (max-width: 980px) {

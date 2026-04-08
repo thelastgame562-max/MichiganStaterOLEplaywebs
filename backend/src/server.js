@@ -30,6 +30,79 @@ function buildFrontendRedirect(payload) {
   return url.toString();
 }
 
+async function sendDiscordChannelMessage(channelId, content) {
+  if (!channelId || !config.botToken) {
+    return false;
+  }
+
+  const response = await fetch(`https://discord.com/api/v10/channels/${channelId}/messages`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bot ${config.botToken}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ content })
+  });
+
+  return response.ok;
+}
+
+function buildDiscordLogMessage(payload) {
+  if (payload.type === "support") {
+    return {
+      channelId: config.channels.support,
+      content:
+        `**SUPPORT REQUEST**\n` +
+        `User: ${payload.user}\n` +
+        `Reason: ${payload.reason}\n` +
+        `Sent by: ${payload.actor || "Unknown"}`
+    };
+  }
+
+  if (payload.type === "infraction") {
+    return {
+      channelId: config.channels.infractions,
+      content:
+        `**${String(payload.action || "INFRACTION").toUpperCase()}**\n` +
+        `User: ${payload.user}\n` +
+        `Reason: ${payload.reason}\n` +
+        `Notes: ${payload.notes || "None"}\n` +
+        `Actor: ${payload.actor || "Unknown"}\n` +
+        `Actor Role: ${payload.actorRole || "unknown"}`
+    };
+  }
+
+  if (payload.type === "promotion") {
+    return {
+      channelId: config.channels.discordLogs,
+      content:
+        `**PROMOTION**\n` +
+        `User: ${payload.user}\n` +
+        `Rank: ${payload.rank}\n` +
+        `Notes: ${payload.notes || "None"}\n` +
+        `Actor: ${payload.actor || "Unknown"}\n` +
+        `Actor Role: ${payload.actorRole || "unknown"}`
+    };
+  }
+
+  if (payload.type === "command") {
+    return {
+      channelId: config.channels.discordLogs,
+      content:
+        `**COMMAND PANEL**\n` +
+        `Action: ${payload.action}\n` +
+        `User: ${payload.user}\n` +
+        `Reason: ${payload.reason}\n` +
+        `Actor: ${payload.actor || "Unknown"}`
+    };
+  }
+
+  return {
+    channelId: config.channels.discordLogs,
+    content: `**PORTAL LOG**\n${JSON.stringify(payload, null, 2)}`
+  };
+}
+
 app.get("/health", (_req, res) => {
   res.json({ ok: true });
 });
@@ -130,6 +203,55 @@ app.get("/api/codes", (_req, res) => {
   res.json(getAllCodes());
 });
 
+app.get("/api/discord/members", async (req, res) => {
+  const query = String(req.query.q || "").trim();
+
+  if (!query) {
+    res.json({ ok: true, members: [] });
+    return;
+  }
+
+  if (!requireConfig([config.guildId, config.botToken])) {
+    res.status(500).json({ ok: false, error: "Discord bot config is incomplete." });
+    return;
+  }
+
+  try {
+    const response = await fetch(
+      `https://discord.com/api/v10/guilds/${config.guildId}/members/search?query=${encodeURIComponent(query)}&limit=10`,
+      {
+        headers: {
+          Authorization: `Bot ${config.botToken}`
+        }
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      res.status(response.status).json({ ok: false, error: "Discord member lookup failed.", details: data });
+      return;
+    }
+
+    const members = data.map((entry) => {
+      const user = entry.user || {};
+      return {
+        id: user.id || "",
+        username: user.username || "",
+        discriminator: user.discriminator || "0",
+        globalName: user.global_name || ""
+      };
+    });
+
+    res.json({ ok: true, members });
+  } catch (error) {
+    res.status(500).json({
+      ok: false,
+      error: error instanceof Error ? error.message : String(error)
+    });
+  }
+});
+
 app.post("/api/codes", (req, res) => {
   const { code, role, createdBy = "api" } = req.body;
 
@@ -168,6 +290,26 @@ app.post("/api/erlc/command", (req, res) => {
   }
 
   res.json(queueErlcCommand({ command, player, reason, actor }));
+});
+
+app.post("/api/discord/log", async (req, res) => {
+  const payload = req.body || {};
+  const { channelId, content } = buildDiscordLogMessage(payload);
+
+  if (!content) {
+    res.status(400).json({ ok: false, error: "No log content provided." });
+    return;
+  }
+
+  try {
+    const sent = await sendDiscordChannelMessage(channelId, content);
+    res.json({ ok: true, sent });
+  } catch (error) {
+    res.status(500).json({
+      ok: false,
+      error: error instanceof Error ? error.message : String(error)
+    });
+  }
 });
 
 app.listen(3001, () => {

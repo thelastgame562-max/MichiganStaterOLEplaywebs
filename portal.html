@@ -20,8 +20,37 @@
           <input type="text" id="portal-username" placeholder="Username" required>
           <input type="password" id="portal-password" placeholder="Password" required>
           <input type="text" id="portal-code" placeholder="Access code" required>
+          <label class="check-row">
+            <input type="checkbox" id="portal-remember">
+            <span>Remember me</span>
+          </label>
           <button type="submit">Enter Portal</button>
         </form>
+        <div class="public-support-card">
+          <h2>Support / Report</h2>
+          <p>No code needed. Use this if you need support or need to report someone on Discord.</p>
+          <form id="public-support-form" class="portal-form">
+            <input type="text" id="public-support-user" placeholder="Username" list="discord-user-options" autocomplete="off" required>
+            <textarea id="public-support-reason" placeholder="Reason" required></textarea>
+            <button type="submit">Send Support Request</button>
+          </form>
+          <div class="public-support-log" id="public-support-log"></div>
+        </div>
+        <a class="back-link" href="index.html">Back To Home</a>
+      </div>
+    </section>
+
+    <section class="login-page" id="public-support-page">
+      <div class="login-card">
+        <span class="portal-badge">Michigan State Roleplay</span>
+        <h1>Public Support / Report</h1>
+        <p>No code needed. Anyone can send a support request or report a Discord user here.</p>
+        <form id="public-support-form-secondary" class="portal-form">
+          <input type="text" id="public-support-user-secondary" placeholder="Username" list="discord-user-options" autocomplete="off" required>
+          <textarea id="public-support-reason-secondary" placeholder="Reason" required></textarea>
+          <button type="submit">Send Support Request</button>
+        </form>
+        <div class="public-support-log" id="public-support-log-secondary"></div>
         <a class="back-link" href="index.html">Back To Home</a>
       </div>
     </section>
@@ -36,6 +65,7 @@
         <nav class="portal-tabs">
           <button type="button" data-tab-target="staff">Staff Chat</button>
           <button type="button" data-tab-target="hr">HR Panel</button>
+          <button type="button" data-tab-target="support">Support</button>
           <button type="button" data-tab-target="shr">SHR Panel</button>
           <button type="button" data-tab-target="command">Command Panel</button>
           <button type="button" data-tab-target="owner">Owner Panel</button>
@@ -68,24 +98,42 @@
             <p class="permission-note" id="promotion-note">This code does not allow promotions.</p>
             <div class="tool-grid">
               <form class="portal-form" id="infraction-form">
-                <input type="text" id="infraction-user" placeholder="Username" required>
+                <input type="text" id="infraction-user" placeholder="Username" list="discord-user-options" autocomplete="off" required>
                 <select id="infraction-type" required>
                   <option value="Warning">Warning</option>
                   <option value="Strike">Strike</option>
-                  <option value="Kick">Kick</option>
-                  <option value="Ban">Ban</option>
+                  <option value="Suspension">Suspension</option>
+                  <option value="Termination">Termination</option>
                 </select>
                 <input type="text" id="infraction-reason" placeholder="Reason" required>
                 <input type="text" id="infraction-notes" placeholder="Notes" required>
                 <button type="submit">Issue Infraction</button>
               </form>
               <form class="portal-form" id="promotion-form">
-                <input type="text" id="promotion-user" placeholder="Username" required>
+                <input type="text" id="promotion-user" placeholder="Username" list="discord-user-options" autocomplete="off" required>
                 <input type="text" id="promotion-rank" placeholder="Promoted rank" required>
                 <input type="text" id="promotion-notes" placeholder="Notes" required>
                 <button type="submit">Log Promotion</button>
               </form>
             </div>
+          </article>
+
+          <article class="portal-panel support-panel" data-tab="support" hidden>
+            <div class="panel-heading support-heading">
+              <h3>Support</h3>
+              <p>Use this page when Discord is down. Staff can create support requests, and HR / SHR can answer them.</p>
+            </div>
+            <form class="portal-form support-form" id="support-form">
+              <input type="text" id="support-user" placeholder="User" required>
+              <textarea id="support-details" placeholder="What support do they need?" required></textarea>
+              <button type="submit">Submit Support</button>
+            </form>
+            <form class="portal-form support-form" id="support-answer-form">
+              <input type="text" id="support-answer-user" placeholder="User to answer" required>
+              <textarea id="support-answer-details" placeholder="HR / SHR answer" required></textarea>
+              <button type="submit">Post Answer</button>
+            </form>
+            <div class="code-table" id="support-log"></div>
           </article>
 
           <article class="portal-panel" data-tab="shr" hidden>
@@ -140,8 +188,8 @@
               <select id="command-type" required>
                 <option value="Warn">Warn</option>
                 <option value="Strike">Strike</option>
-                <option value="Kick">Kick</option>
-                <option value="Ban">Ban</option>
+                <option value="Suspension">Suspension</option>
+                <option value="Termination">Termination</option>
               </select>
               <input type="text" id="command-user" placeholder="Username" required>
               <input type="text" id="command-reason" placeholder="Reason" required>
@@ -236,6 +284,8 @@
     </section>
   </main>
 
-  <script src="portal-app.js"></script>
+  <datalist id="discord-user-options"></datalist>
+
+  <script src="portal.js"></script>
 </body>
 </html>
